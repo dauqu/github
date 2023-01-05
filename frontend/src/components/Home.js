@@ -1,6 +1,6 @@
 
 export default function Home() {
-    const url = "https://github.com/login/oauth/authorize?client_id=Iv1.72f299b0ba45be0a&redirect_uri=https://manage.dauqu.com/&scope=user,repo";
+    const url = "https://github.com/login/oauth/authorize?client_id=Iv1.72f299b0ba45be0a&redirect_uri=http://localhost:3000/gitcode/&scope=user,repo";
 
     const openWindow = () => {
         const width = 600;
@@ -13,6 +13,8 @@ export default function Home() {
             newWindow.focus();
         }
     }
+
+
     return (
         <div>
             <div className="hero min-h-screen bg-base-200 rounded-none">

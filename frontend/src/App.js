@@ -6,6 +6,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import Home from './components/Home';
+import GitCode from './components/GitCode';
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
       },
     ],
   },
+  {
+    path: "/gitcode",
+    element: <GitCode />,
+  }
 ]);
 
 function App() {
