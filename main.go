@@ -1,36 +1,26 @@
 package main
 
 import (
-	// "encoding/json"
-	"fmt"
-	"io/ioutil"
 	"net/http"
 
+	routes "dauqu.com/github/routes"
+	config "dauqu.com/github/config"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
 func main() {
 	app := mux.NewRouter()
+	config.ConnectDB()
 
-	//Get by ID
 	// app.HandleFunc("/", RedirectHandler)
-	app.HandleFunc("/api/github", Github).Methods("POST")
+	app.HandleFunc("/api/github", routes.Github).Methods("POST")
 
 	//Allow CORS
 	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
 	originsOk := handlers.AllowedOrigins([]string{"*"})
 	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
 	http.ListenAndServe(":8000", handlers.CORS(originsOk, headersOk, methodsOk)(app))
-}
-
-func Github(w http.ResponseWriter, r *http.Request) {
-	//Print body
-	body, _ := ioutil.ReadAll(r.Body)
-	fmt.Println(string(body))
-
-	//Print method
-	fmt.Println(r.Method)
 }
 
 // func RedirectHandler(w http.ResponseWriter, r *http.Request) {
