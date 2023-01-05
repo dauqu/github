@@ -32,7 +32,7 @@ func Github(w http.ResponseWriter, r *http.Request) {
 	var response Response
 	json.Unmarshal(body, &response)
 
-	username := "harsha"
+	username := "harshaweb"
 
 	//Check username exists
 	var user models.User
@@ -41,27 +41,31 @@ func Github(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 	}
 
-	//check user === username
+	//if user exists
 	if user.Username != username {
-		resp, err := UpdateAccessToken(response.Code, username)
+		res, err := GetAccessToken(response.Code, username)
 		if err != nil {
 			fmt.Println(err)
 		}
 
-		fmt.Println(resp)
+		//ReturnJSON response
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(res)
+
+	} else {
+
+		res, err := UpdateAccessToken(response.Code, username)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		//ReturnJSON response
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(res)
+
 	}
-
-	res, err := GetAccessToken(response.Code, username)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	fmt.Println(res)
-
-	//ReturnJSON response
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(res)
 }
 
 func UpdateAccessToken(code string, username string) (container_id string, err error) {
