@@ -1,33 +1,69 @@
+import Header from "./Header";
+import * as React from 'react';
+import axios from 'axios';
 
 export default function Home() {
-    const url = "https://github.com/login/oauth/authorize?client_id=Iv1.72f299b0ba45be0a&redirect_uri=http://localhost:3000/gitcode/&scope=user,repo";
 
-    const openWindow = () => {
-        const width = 600;
-        const height = 600;
-        const left = window.screen.width / 2 - width / 2;
-        const top = window.screen.height / 2 - height / 2;
-        const windowFeatures = `toolbar=no, menubar=no, width=${width}, height=${height}, top=${top}, left=${left}`;
-        const newWindow = window.open(url, "Github Login", windowFeatures);
-        if (window.focus) {
-            newWindow.focus();
-        }
+
+
+    const [isloading, setIsLoading] = React.useState(false);
+    const [repos, setRepos] = React.useState([]);
+
+    async function getAllRepos() {
+        //Set loading to true
+        setIsLoading(true);
+        //Axios get request with header 
+        await axios.get("http://localhost:8000/api/get-repos").then((res) => {
+            setRepos(res.data);
+            setIsLoading(false);
+        }).catch((err) => {
+            console.log(err);
+            setIsLoading(false);
+        });
     }
 
+    console.log(repos);
+
+    React.useEffect(() => {
+        getAllRepos();
+    }, []);
 
     return (
         <div>
-            <div className="hero min-h-screen bg-base-200 rounded-none">
-                <div className="hero-content flex-col">
-                    <div className="text-center">
-                        <h1 className="mb-5 text-5xl font-bold">Welcome to React</h1>
-                        <p className="max-w-md mb-10 text-2xl">To get started, edit <code>src/App.js</code> and save to reload.</p>
-                        <button className="btn btn-primary" onClick={
-                            () => {
-                                //Open subwindow
-                                openWindow();
-                            }
-                        }>Learn React</button>
+            <Header />
+            <div className="p-5 hero">
+                <div className="hero-content min-w-full items-start">
+                    <div className="w-[30%] h-[85%] justify-center">
+                        <h1 className="text-4xl font-bold">Welcome to GitCode</h1>
+                        <p className="text-lg">GitCode is a web application that allows you to search for a GitHub user and view their repositories.</p>
+
+                    </div>
+                    <div className="overflow-x-scroll h-[85vh] w-[70%]">
+                        <table className="table w-full">
+                            {/* <!-- head --> */}
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Name</th>
+                                    <th>Visibility</th>
+                                    <th>Created AT</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {isloading ? <div className="flex w-full h-full justify-center items-center"><div>Loading...</div></div> : repos !== null && repos.map((repo, index) => {
+                                    return (
+                                        <tr key={index}>
+                                            <th>{index + 1}</th>
+                                            <td>{repo.full_name}</td>
+                                            <td>
+                                                {repo.visibility !== "public" ? <span className="badge badge-error">Private</span> : <span className="badge badge-success">Public</span>}
+                                            </td>
+                                            <td>{repo.created_at}</td>
+                                        </tr>
+                                    )
+                                })}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

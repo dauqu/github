@@ -33,7 +33,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		//Return error response JSON
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode("All fields are required")
+		json.NewEncoder(w).Encode(map[string]interface{}{"message": "All fields are required"})
 		return
 	}
 
@@ -44,7 +44,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		//Return error response JSON
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode("Username already exists")
+		json.NewEncoder(w).Encode(map[string]interface{}{"message": "Username already exists"})
 		return
 	}
 
@@ -55,7 +55,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		//Return error response JSON
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode("Email already exists")
+		json.NewEncoder(w).Encode(map[string]interface{}{"message": "Email already exists"})
 		return
 	}
 
@@ -83,5 +83,5 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	//ReturnJSON response
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(result)
+	json.NewEncoder(w).Encode(map[string]interface{}{"message": "User created", "id": result.InsertedID})
 }

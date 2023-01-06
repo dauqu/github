@@ -17,15 +17,18 @@ func main() {
 	// app.HandleFunc("/", RedirectHandler)
 	app.HandleFunc("/api/register", routes.Register).Methods("POST")
 	app.HandleFunc("/api/login", routes.Login).Methods("POST")
-	app.HandleFunc("/api/get-token", routes.GetToken).Methods("POST")
+	app.HandleFunc("/api/is-logged-in", routes.IsLoggedIn).Methods("GET")
+	app.HandleFunc("/api/get-repos", routes.GetToken).Methods("GET")
 	app.HandleFunc("/api/github", routes.Github).Methods("POST")
+	app.HandleFunc("/api/create-auth", routes.Createauth).Methods("GET")
 
 	//Allow CORS
 	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
-	originsOk := handlers.AllowedOrigins([]string{"*"})
+	originsOk := handlers.AllowedOrigins([]string{"http://localhost:3000"})
 	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
+	//Allow credentials (cookies)
+	credentialsOk := handlers.AllowCredentials()
 
 	fmt.Println("Server started on port http://localhost:8000")
-	http.ListenAndServe(":8000", handlers.CORS(originsOk, headersOk, methodsOk)(app))
+	http.ListenAndServe(":8000", handlers.CORS(originsOk, headersOk, methodsOk, credentialsOk)(app))
 }
-

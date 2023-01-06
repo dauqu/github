@@ -3,7 +3,7 @@ import axios from 'axios';
 export default function GitCode() {
     //get data from query string
     const query = new URLSearchParams(window.location.search);
-    const code = query.get("code");
+    const code = query.get("installation_id");
 
     console.log(code);
 
@@ -13,10 +13,10 @@ export default function GitCode() {
             code: code
         }).then((response) => {
             console.log(response);
-            window.close();
+            // window.close();
         }).catch((error) => {
             console.log(error);
-            window.close();
+            // window.close();
         });
     }
 

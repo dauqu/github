@@ -3,10 +3,12 @@ package routes
 import (
 	"context"
 	"encoding/json"
-	"go.mongodb.org/mongo-driver/bson"
-	"golang.org/x/crypto/bcrypt"
 	"net/http"
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+	"golang.org/x/crypto/bcrypt"
 
 	//JWT
 	"github.com/golang-jwt/jwt/v4"
@@ -28,8 +30,14 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	//Get Token from username
 	resp, err := UsersCollection.FindOne(ctx, bson.M{"email": body.Email}).DecodeBytes()
-	if err != nil {
+	if err == mongo.ErrNoDocuments {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(map[string]string{"message": "User not found"})
 		return
+	}
+	if err != nil {
+		return // err
 	}
 
 	hashedPassword := resp.Lookup("password").StringValue()
@@ -41,7 +49,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode("Invalid password")
+		json.NewEncoder(w).Encode(map[string]string{"message": "Incorrect password"})
 		return
 	}
 
@@ -61,6 +69,10 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	cookie := http.Cookie{
 		Name:    "token",
 		Value:   t,
+		//SameSite none
+		SameSite: http.SameSiteNoneMode,
+		//Allow cookie to be sent over HTTPS
+		Secure: false,
 		Expires: time.Now().Add(24 * time.Hour),
 	}
 
@@ -71,4 +83,49 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	//Return token with message and token
 	json.NewEncoder(w).Encode(map[string]string{"message": "Logged in successfully", "token": t})
+}
+
+// Check if user is logged in
+func IsLoggedIn(w http.ResponseWriter, r *http.Request) {
+	cookie, err := r.Cookie("token")
+	if err != nil {
+		if err == http.ErrNoCookie {
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusUnauthorized)
+			json.NewEncoder(w).Encode(map[string]string{"message": "Unauthorized"})
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(map[string]string{"message": "Bad request " + err.Error()})
+		return
+	}
+
+	tokenString := cookie.Value
+
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, err
+		}
+		return []byte("secret"), nil
+	})
+
+	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(map[string]string{"message": "Unauthorized"})
+		return
+	}
+
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(map[string]string{"message": "Authorized", "username": claims["username"].(string), "email": claims["email"].(string)})
+		return
+	} else {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusNetworkAuthenticationRequired)
+		json.NewEncoder(w).Encode(map[string]string{"message": "Unauthorized"})
+		return
+	}
 }
