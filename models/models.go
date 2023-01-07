@@ -26,3 +26,10 @@ type Github struct {
 	CreatedAt    time.Time          `json:"created_at,omitempty" bson:"created_at,omitempty" time_format:"2006-01-02 15:04:05" time_now:"true" default:"true" imutable:"true"`
 	UpdatedAt    time.Time          `json:"updated_at,omitempty" bson:"updated_at,omitempty" time_format:"2006-01-02 15:04:05" time_now:"true" default:"true"`
 }
+type AppInnstalled struct {
+	ID        primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
+	Username  string             `json:"username"`
+	AppID     int                `json:"app_id"`
+	CreatedAt time.Time          `json:"created_at,omitempty" bson:"created_at,omitempty" time_format:"2006-01-02 15:04:05" time_now:"true" default:"true" imutable:"true"`
+	UpdatedAt time.Time          `json:"updated_at,omitempty" bson:"updated_at,omitempty" time_format:"2006-01-02 15:04:05" time_now:"true" default:"true"`
+}

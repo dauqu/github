@@ -40,7 +40,6 @@ func Createauth(w http.ResponseWriter, r *http.Request) {
 	token.Claims = jwt.MapClaims{
 		"iss": 277956,
 		"iat": time,
-		//Exp in 10 minutes
 		"exp": time + 600,
 	}
 
@@ -50,5 +49,8 @@ func Createauth(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 	fmt.Println(tokenString)
+
+	//Send token to client
+	w.Write([]byte(tokenString))
 
 }

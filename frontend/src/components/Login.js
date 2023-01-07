@@ -19,6 +19,8 @@ export default function Login() {
             console.log(res);
             //Set loading to false
             setIsLoading(false);
+            //If login is successful, redirect to home page
+            window.location.href = "/";
         }).catch((err) => {
             console.log(err);
             //Set loading to false

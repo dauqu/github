@@ -26,8 +26,8 @@ export default function Header() {
         const url = "https://github.com/apps/dauqu/installations/new";
 
     const openWindow = () => {
-        const width = 600;
-        const height = 600;
+        const width = 1000;
+        const height = 400;
         const left = window.screen.width / 2 - width / 2;
         const top = window.screen.height / 2 - height / 2;
         const windowFeatures = `toolbar=no, menubar=no, width=${width}, height=${height}, top=${top}, left=${left}`;

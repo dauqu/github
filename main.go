@@ -20,7 +20,9 @@ func main() {
 	app.HandleFunc("/api/is-logged-in", routes.IsLoggedIn).Methods("GET")
 	app.HandleFunc("/api/get-repos", routes.GetToken).Methods("GET")
 	app.HandleFunc("/api/github", routes.Github).Methods("POST")
+	app.HandleFunc("/api/connect-github", routes.ConnectGithub).Methods("POST")
 	app.HandleFunc("/api/create-auth", routes.Createauth).Methods("GET")
+	app.HandleFunc("/api/get-my-repos", routes.GetMyRepos).Methods("GET")
 
 	//Allow CORS
 	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})

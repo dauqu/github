@@ -9,14 +9,14 @@ export default function GitCode() {
 
     //Post request to backend
     async function postData() {
-        await axios.post("http://localhost:8000/api/github", {
-            code: code
+        await axios.post("http://localhost:8000/api/connect-github", {
+            installation_id: code
         }).then((response) => {
             console.log(response);
-            // window.close();
+            window.close();
         }).catch((error) => {
             console.log(error);
-            // window.close();
+            window.close();
         });
     }
 

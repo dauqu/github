@@ -55,7 +55,7 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
+    <div className="">
       {isloading ? <div>Loading...</div> : <RouterProvider router={router} />}
     </div>
   );
