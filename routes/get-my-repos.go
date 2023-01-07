@@ -103,6 +103,8 @@ func GetMyRepos(w http.ResponseWriter, r *http.Request) {
 	//Get access token
 	access_token := response.Token
 
+	fmt.Println(access_token)
+
 	//Get repos
 	URL = "https://api.github.com/installation/repositories?per_page=100&visibility=all"
 
