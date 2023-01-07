@@ -22,8 +22,6 @@ export default function Home() {
         });
     }
 
-    console.log(repos);
-
     React.useEffect(() => {
         getAllRepos();
     }, []);
