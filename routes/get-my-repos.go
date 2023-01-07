@@ -15,9 +15,17 @@ import (
 func GetMyRepos(w http.ResponseWriter, r *http.Request) {
 
 	//Get cookies from request
-	cookie, err := r.Cookie("token")
+	cookie, err := r.Cookie("token") 
 	if err != nil {
 		fmt.Println(err)
+	}
+
+	//Check if token haven't value
+	if cookie.Value == "" {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(map[string]string{"message": "Invalid token"})
+		return
 	}
 
 	//Verify token
