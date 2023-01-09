@@ -41,7 +41,7 @@ function App() {
     const navigate = router.navigate;
 
     //Get request to backend to check if user is logged in
-    axios.get("https://test.dauqu.host/api/is-logged-in").then((res) => {
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/is-logged-in`).then((res) => {
       setIsLoading(false);
     }).catch((err) => {
       console.log(err);
