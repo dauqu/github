@@ -12,7 +12,7 @@ export default function Login() {
         //Set loading to true
         setIsLoading(true);
         //Axios Post request to backend
-        await axios.post("http://localhost:8000/api/login", {
+        await axios.post("https://test.dauqu.host/api/login", {
             Email: email,
             Password: password,
         }).then((res) => {

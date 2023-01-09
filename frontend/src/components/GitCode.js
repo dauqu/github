@@ -9,7 +9,7 @@ export default function GitCode() {
 
     //Post request to backend
     async function postData() {
-        await axios.post("http://localhost:8000/api/connect-github", {
+        await axios.post("https://test.dauqu.host/api/connect-github", {
             installation_id: code
         }).then((response) => {
             console.log(response);

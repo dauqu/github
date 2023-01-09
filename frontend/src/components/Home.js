@@ -13,7 +13,7 @@ export default function Home() {
         //Set loading to true
         setIsLoading(true);
         //Axios get request with header 
-        await axios.get("http://localhost:8000/api/get-my-repos").then((res) => {
+        await axios.get("https://test.dauqu.host/api/get-my-repos").then((res) => {
             setRepos(res.data.repositories);
             setIsLoading(false);
         }).catch((err) => {
