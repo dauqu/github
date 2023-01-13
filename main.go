@@ -25,7 +25,7 @@ func main() {
 	app.HandleFunc("/api/get-my-repos", routes.GetMyRepos).Methods("GET")
 
 	//Allow CORS
-	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
+	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization", "Accept", "Access-Control-Allow-Origin"})
 	originsOk := handlers.AllowedOrigins([]string{"http://localhost:3000", "https://github-orpin.vercel.app"})
 	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
 	//Allow credentials (cookies)
