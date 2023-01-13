@@ -12,7 +12,7 @@ export default function Login() {
         //Set loading to true
         setIsLoading(true);
         //Axios Post request to backend
-        await axios.post("https://test.dauqu.host/api/login", {
+        await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/login`, {
             Email: email,
             Password: password,
         }).then((res) => {

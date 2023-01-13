@@ -8,7 +8,7 @@ export default function Header() {
     const [isloading, setIsLoading] = React.useState(true);
 
     async function getProfile() {
-        await axios.get("https://test.dauqu.host/api/profile").then((res) => {
+        await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/profile`).then((res) => {
             setProfile(res.data);
             setIsLoading(false);
         }).catch((err) => {
