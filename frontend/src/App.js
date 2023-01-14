@@ -9,18 +9,23 @@ import {
 } from "react-router-dom";
 import Home from './components/Home';
 import GitCode from './components/GitCode';
+import Register from './components/Register';
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/home",
     element: <Home />,
     children: [
 
     ],
   },
   {
-    path: "login",
+    path: "/",
     element: <Login />,
+  },
+  {
+    path: "/register",
+    element: <Register />,
   },
   {
     path: "/gitcode",
@@ -43,10 +48,11 @@ function App() {
     //Get request to backend to check if user is logged in
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/is-logged-in`).then((res) => {
       setIsLoading(false);
+      if (res.data.message === "Authorized") {
+        navigate("/home");
+      }
     }).catch((err) => {
-      console.log(err);
       setIsLoading(false);
-      navigate("/login");
     });
   }
 

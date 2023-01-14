@@ -1,6 +1,11 @@
 import Header from "./Header";
 import * as React from 'react';
 import axios from 'axios';
+import {
+    createBrowserRouter,
+    RouterProvider,
+    useNavigate,
+} from "react-router-dom";
 
 export default function Home() {
 
@@ -22,8 +27,24 @@ export default function Home() {
         });
     }
 
+
+    async function CheckLogin() {
+        //UseNavigate 
+        const navigate = useNavigate();
+
+        //Get request to backend to check if user is logged in
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/is-logged-in`).then((res) => {
+            setIsLoading(false);
+            console.log(res);
+        }).catch((err) => {
+            console.log(err);
+            setIsLoading(false);
+        });
+    }
+
     React.useEffect(() => {
         getAllRepos();
+        CheckLogin();
     }, []);
 
     return (
@@ -81,7 +102,7 @@ export default function Home() {
                                                 </div>
                                             </td>
                                             <td>
-                                            {repo.visibility !== "public" ? <span className="badge badge-error">Private</span> : <span className="badge badge-success">Public</span>}
+                                                {repo.visibility !== "public" ? <span className="badge badge-error">Private</span> : <span className="badge badge-success">Public</span>}
                                                 <br />
                                                 <span className="badge badge-ghost badge-sm">
                                                     {/* Last update in ago */}
