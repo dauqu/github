@@ -16,18 +16,18 @@ import (
 
 var AppsCollection *mongo.Collection = config.GetCollection(config.DB, "installed_apps")
 
-func ConnectGithub(w http.ResponseWriter, r *http.Request) {
+func InstallApp(w http.ResponseWriter, r *http.Request) {
 	//Read body
 	body, _ := ioutil.ReadAll(r.Body)
 
 	//Create context
 	ctx, _ := context.WithTimeout(context.Background(), 600*time.Second)
 
-	type Response struct {
+	type Body struct {
 		InstallationID string `json:"installation_id"`
 	}
 
-	var response Response
+	var response Body
 	json.Unmarshal(body, &response)
 
 	//Get cookies from request
@@ -59,21 +59,24 @@ func ConnectGithub(w http.ResponseWriter, r *http.Request) {
 	installation_id := response.InstallationID
 
 	//Check if app is already installed
-	var result bson.M
-	err = AppsCollection.FindOne(ctx, bson.M{"installation_id": installation_id}).Decode(&result)
+	result, err := AppsCollection.FindOne(ctx, bson.M{"installation_id": installation_id}).DecodeBytes()
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	//If app is already installed
-	if result != nil {
-		//Return response
+	//Get installation id from database
+	installation_id_db := result.Lookup("installation_id").StringValue()
+
+	fmt.Println(installation_id_db)
+	fmt.Println(installation_id)
+
+	//Check if installation id is already in database
+	if installation_id == installation_id_db {
 		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
+		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(map[string]string{"message": "App is already installed"})
 		return
 	}
-	
 
 	//Create a new document
 	_, err = AppsCollection.InsertOne(ctx, bson.M{

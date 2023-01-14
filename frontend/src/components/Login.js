@@ -20,7 +20,7 @@ export default function Login() {
             //Set loading to false
             setIsLoading(false);
             //If login is successful, redirect to home page
-            window.location.href = "/";
+            window.location.href = "/dashboard";
         }).catch((err) => {
             console.log(err);
             //Set loading to false

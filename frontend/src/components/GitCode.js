@@ -9,7 +9,7 @@ export default function GitCode() {
 
     //Post request to backend
     async function postData() {
-        await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/connect-github`, {
+        await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/install-app`, {
             installation_id: code
         }).then((response) => {
             console.log(response);

@@ -15,7 +15,7 @@ import (
 func GetMyRepos(w http.ResponseWriter, r *http.Request) {
 
 	//Get cookies from request
-	cookie, err := r.Cookie("token") 
+	cookie, err := r.Cookie("token")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -67,7 +67,6 @@ func GetMyRepos(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(res)
 	//Post request to get access token
 	URL := "https://api.github.com/app/installations/" + installation_id_string + "/access_tokens"
 
@@ -129,7 +128,6 @@ func GetMyRepos(w http.ResponseWriter, r *http.Request) {
 	//Body to JSOn
 	var data interface{}
 	json.Unmarshal(body, &data)
-
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)

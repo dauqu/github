@@ -31,11 +31,11 @@ func main() {
 	app.HandleFunc("/api/register", routes.Register).Methods("POST")
 	app.HandleFunc("/api/login", routes.Login).Methods("POST")
 	app.HandleFunc("/api/is-logged-in", routes.IsLoggedIn).Methods("GET")
-	app.HandleFunc("/api/get-repos", routes.GetToken).Methods("GET")
-	app.HandleFunc("/api/github", routes.Github).Methods("POST")
-	app.HandleFunc("/api/connect-github", routes.ConnectGithub).Methods("POST")
+	app.HandleFunc("/api/install-app", routes.InstallApp).Methods("POST")
 	app.HandleFunc("/api/create-auth", routes.Createauth).Methods("GET")
 	app.HandleFunc("/api/get-my-repos", routes.GetMyRepos).Methods("GET")
+	//Get all my apps
+	app.HandleFunc("/api/installed-apps", routes.InstalledApps).Methods("GET")
 
 	//Allow CORS
 	credentialsOk := handlers.AllowCredentials()
