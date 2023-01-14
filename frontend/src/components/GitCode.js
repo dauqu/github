@@ -13,10 +13,10 @@ export default function GitCode() {
             installation_id: code
         }).then((response) => {
             console.log(response);
-            window.close();
+            // window.close();
         }).catch((error) => {
             console.log(error);
-            window.close();
+            // window.close();
         });
     }
 

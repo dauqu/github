@@ -65,13 +65,13 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return // err
 	}
 
-	//Set cookie
+	//Set cookie with token
 	cookie := http.Cookie{
 		Name:    "token",
 		Value:   t,
-		Expires: time.Now().Add(24 * time.Hour),
+		Expires: time.Now().Add(time.Hour * 24),
 	}
-
+	
 	http.SetCookie(w, &cookie)
 
 	//Return token

@@ -52,6 +52,8 @@ func GetToken(w http.ResponseWriter, r *http.Request) {
 		return // err
 	}
 
+	fmt.Println(user["access_token"])
+
 	//Get request http
 	url := "https://api.github.com/user/repos"
 	req, _ := http.NewRequest("GET", url, nil)
