@@ -19,7 +19,7 @@ func Createauth(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//Read pen file
-	pem, err := ioutil.ReadFile(dir + "/routes/dauqu.2023-01-06.private-key.pem")
+	pem, err := ioutil.ReadFile(dir + "/routes/key.pem")
 	if err != nil {
 		fmt.Println(err)
 	}

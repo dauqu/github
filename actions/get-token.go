@@ -15,7 +15,7 @@ func GetToken() (token string, err error) {
 	}
 
 	//Read pen file
-	pem, err := ioutil.ReadFile(dir + "/routes/dauqu.2023-01-06.private-key.pem")
+	pem, err := ioutil.ReadFile(dir + "/routes/key.pem")
 	if err != nil {
 		return "", err
 	}

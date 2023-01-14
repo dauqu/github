@@ -69,9 +69,9 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	cookie := http.Cookie{
 		Name:    "token",
 		//Same site: none, secure: true
-		SameSite: http.SameSiteNoneMode,
-		Secure:   true,
+		// SameSite: http.SameSiteNoneMode,
 		Value:   t,
+		// Secure:  false,
 		Expires: time.Now().Add(time.Hour * 24),
 	}
 	
