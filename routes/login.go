@@ -70,6 +70,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		Name:    "token",
 		Value:   t,
 		SameSite: http.SameSiteNoneMode,
+		Secure: true,
 		Expires: time.Now().Add(24 * time.Hour),
 	}
 
