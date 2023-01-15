@@ -23,5 +23,6 @@ require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/golang-jwt/jwt/v4 v4.4.3
 	github.com/gorilla/mux v1.8.0 // indirect
+	github.com/robfig/cron v1.2.0
 	go.mongodb.org/mongo-driver v1.11.1
 )

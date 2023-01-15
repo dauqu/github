@@ -2,24 +2,16 @@ package routes
 
 import (
 	"fmt"
+	"github.com/golang-jwt/jwt/v4"
 	"io/ioutil"
-	"net/http"
 	"os"
 	"time"
-
-	"github.com/golang-jwt/jwt/v4"
 )
 
-func Createauth(w http.ResponseWriter, r *http.Request) {
+func AppAuth(key_path string) error {
 
 	//Get current working directory
 	dir, err := os.Getwd()
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	//Read pen file
-	pem, err := ioutil.ReadFile(dir + "/routes/key.pem")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -28,7 +20,7 @@ func Createauth(w http.ResponseWriter, r *http.Request) {
 	time := time.Now().Unix()
 
 	// Load the private key
-	privateKey, err := jwt.ParseRSAPrivateKeyFromPEM([]byte(pem))
+	privateKey, err := jwt.ParseRSAPrivateKeyFromPEM([]byte(key_path))
 	if err != nil {
 		panic(err)
 	}
@@ -48,10 +40,6 @@ func Createauth(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(tokenString)
-
-	//Send token to client
-	w.Write([]byte(tokenString))
 
 	//Store token in a file
 	err = ioutil.WriteFile(dir+"/routes/token.txt", []byte(tokenString), 0644)
@@ -59,6 +47,5 @@ func Createauth(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 	}
 
-	
-
+	return nil
 }

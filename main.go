@@ -2,18 +2,46 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"net/http"
+	"os"
 	"time"
 
 	config "dauqu.com/github/config"
 	routes "dauqu.com/github/routes"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"github.com/robfig/cron"
 )
 
 func main() {
 	app := mux.NewRouter()
+
+	//Connect to database
 	config.ConnectDB()
+
+	//Get current working directory
+	dir, err := os.Getwd()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	//Read pen file
+	pem, err := ioutil.ReadFile(dir + "/routes/key.pem")
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	//Cron job to refresh token
+	c := cron.New()
+	c.AddFunc("@every 9m", func() {
+		fmt.Println("Token refreshed at", time.Now())
+		err = routes.AppAuth(string(pem))
+		if err != nil {
+			fmt.Println(err)
+		}
+	})
+	c.Start()
 
 	app.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		//Set cookie
@@ -22,7 +50,6 @@ func main() {
 			Value:   "123",
 			Expires: time.Now().Add(24 * time.Hour),
 		}
-
 		http.SetCookie(w, &cookie)
 		fmt.Fprintf(w, "Hello World")
 	})
@@ -34,8 +61,11 @@ func main() {
 	app.HandleFunc("/api/install-app", routes.InstallApp).Methods("POST")
 	app.HandleFunc("/api/create-auth", routes.Createauth).Methods("GET")
 	app.HandleFunc("/api/get-my-repos", routes.GetMyRepos).Methods("GET")
-	//Get all my apps
+	//Get Repos by ID
+	app.HandleFunc("/api/get-repos", routes.GetRepoById).Methods("POST")
 	app.HandleFunc("/api/installed-apps", routes.InstalledApps).Methods("GET")
+	//Catch all events from github
+	app.HandleFunc("/api/events", routes.Events).Methods("POST")
 
 	//Allow CORS
 	credentialsOk := handlers.AllowCredentials()

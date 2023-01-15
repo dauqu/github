@@ -8,8 +8,19 @@ import {
 export default function Dashboard() {
 
     const [login_checking, setLoginChecking] = React.useState(true);
-
     var navigate = useNavigate();
+
+    const [data, setData] = React.useState([]);
+
+    async function GetRepos(e) {
+        await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/get-repos`, {
+            "installation_id": e
+        }).then((res) => {
+            setData(res.data);
+        }).catch((err) => {
+            console.log(err);
+        });
+    }
 
     const [apps, setApps] = React.useState([]);
     async function GetAllApps() {
@@ -72,11 +83,15 @@ export default function Dashboard() {
                             Select a repository to view its details and to view its commits.
                         </p>
                         <select className="select select-bordered w-full max-w-xs mt-5" onChange={
-                            (e) => { }}>
+                            (e) => {
+                                GetRepos(e.target.value);
+                            }}>
                             <option disabled selected>Select App And View Repos</option>
                             {apps.map((app, index) => {
                                 return (
-                                    <option key={index}>{app.installation_id}</option>
+                                    <option onClick={(e) => {
+                                        GetRepos(app.installation_id);
+                                    }} key={index} value={app.installation_id}>{app.installation_id}</option>
                                 )
                             })}
                         </select>
