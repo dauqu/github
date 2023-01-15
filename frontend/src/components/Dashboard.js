@@ -11,6 +11,7 @@ export default function Dashboard() {
     var navigate = useNavigate();
 
     const [data, setData] = React.useState([]);
+    console.log(data);
 
     async function GetRepos(e) {
         await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/get-repos`, {
@@ -54,6 +55,8 @@ export default function Dashboard() {
     const [isloading, setIsLoading] = React.useState(false);
     const [repos, setRepos] = React.useState([]);
 
+    console.log(repos);
+
     async function getAllRepos() {
         //Set loading to true
         setIsLoading(true);
@@ -86,7 +89,7 @@ export default function Dashboard() {
                             (e) => {
                                 GetRepos(e.target.value);
                             }}>
-                            <option disabled selected>Select App And View Repos</option>
+                            <option disabled defaultValue>Select App And View Repos</option>
                             {apps.map((app, index) => {
                                 return (
                                     <option onClick={(e) => {
@@ -111,15 +114,7 @@ export default function Dashboard() {
                             <tbody>
                                 {isloading ? <div className="flex w-full h-full justify-center items-center"><div>Loading...</div></div> : repos !== null && repos.map((repo, index) => {
                                     return (
-                                        // <tr key={index}>
-                                        //     <th>{index + 1}</th>
-                                        //     <td>{repo.full_name}</td>
-                                        //     <td>
-                                        //         {repo.visibility !== "public" ? <span className="badge badge-error">Private</span> : <span className="badge badge-success">Public</span>}
-                                        //     </td>
-                                        //     <td>{repo.created_at}</td>
-                                        // </tr>
-                                        <tr>
+                                        <tr key={index}>
                                             <th>
                                                 <label>
                                                     {/* Index */}
@@ -145,14 +140,18 @@ export default function Dashboard() {
                                                 <br />
                                                 <span className="badge badge-ghost badge-sm">
                                                     {/* Last update in ago */}
-                                                    {repo.updated_at !== null ? repo.updated_at : "No update"}
+                                                    {repo.default_branch !== null ? repo.default_branch : "No update"}
                                                 </span>
                                             </td>
                                             <td>
                                                 <div className="text-sm opacity-50">{repo.created_at}</div>
                                             </td>
                                             <th>
-                                                <button className="btn btn-ghost btn-xs">details</button>
+                                                <button className="btn btn-ghost btn-xs"
+                                                onClick={(e) => {
+                                                        // Onclick copy to clipboard
+                                                        navigator.clipboard.writeText(repo.clone_url);
+                                                    }}>Copy Clone URL</button>
                                             </th>
                                         </tr>
                                     )

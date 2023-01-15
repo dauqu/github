@@ -37,6 +37,5 @@ func Events(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Cookie:", cookie)
 	fmt.Println("Form:", form)
 	fmt.Println("Method:", method)
-	
 }
 

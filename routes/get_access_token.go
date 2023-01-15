@@ -8,8 +8,8 @@ import (
 	"os"
 )
 
-func GetRepoById(w http.ResponseWriter, r *http.Request) {
-
+func GetAccessToken(w http.ResponseWriter, r *http.Request) {
+	
 	type Body struct {
 		InstallationId string `json:"installation_id"`
 	}
@@ -22,8 +22,6 @@ func GetRepoById(w http.ResponseWriter, r *http.Request) {
 	json.Unmarshal(body_data, &bodyData)
 
 	id := bodyData.InstallationId
-
-	//Get installation id
 
 	//Get current working directory
 	dir, err := os.Getwd()
@@ -60,50 +58,26 @@ func GetRepoById(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	defer resp.Body.Close()
 
-	//Log Body in JSON
-	body, _ := ioutil.ReadAll(resp.Body)
+	//Read response
+	responseData, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	type Response struct {
 		Token string `json:"token"`
 	}
 
 	var response Response
-	json.Unmarshal(body, &response)
 
-	//Get access token
-	access_token := response.Token
+	json.Unmarshal(responseData, &response)
 
-	//Get repos
-	URL = "https://api.github.com/installation/repositories?per_page=100&visibility=all"
+	//Write cookie
+	cookie := http.Cookie{Name: "token", Value: response.Token}
+	http.SetCookie(w, &cookie)
 
-	//Create request
-	req, err = http.NewRequest("GET", URL, nil)
-	if err != nil {
-		fmt.Println(err)
-	}
-	//Authorization
-	req.Header.Set("Authorization", "token "+access_token)
-	// Set the request header
-	req.Header.Set("Content-Type", "application/json")
-	//Accept: application/json
-	req.Header.Set("Accept", "application/json")
-
-	client = &http.Client{}
-	resp, err = client.Do(req)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	//Log Body in JSON
-	body, _ = ioutil.ReadAll(resp.Body)
-	//Body to JSOn
-	var data interface{}
-	json.Unmarshal(body, &data)
-
+	//Write response
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(map[string]interface{}{"message": data, "token": token})
-	//Return
+	w.Write(responseData)
 }

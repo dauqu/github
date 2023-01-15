@@ -32,6 +32,11 @@ func main() {
 		fmt.Println(err)
 	}
 
+	err = routes.AppAuth(string(pem))
+	if err != nil {
+		fmt.Println(err)
+	}
+
 	//Cron job to refresh token
 	c := cron.New()
 	c.AddFunc("@every 9m", func() {
@@ -59,13 +64,16 @@ func main() {
 	app.HandleFunc("/api/login", routes.Login).Methods("POST")
 	app.HandleFunc("/api/is-logged-in", routes.IsLoggedIn).Methods("GET")
 	app.HandleFunc("/api/install-app", routes.InstallApp).Methods("POST")
-	app.HandleFunc("/api/create-auth", routes.Createauth).Methods("GET")
 	app.HandleFunc("/api/get-my-repos", routes.GetMyRepos).Methods("GET")
 	//Get Repos by ID
 	app.HandleFunc("/api/get-repos", routes.GetRepoById).Methods("POST")
 	app.HandleFunc("/api/installed-apps", routes.InstalledApps).Methods("GET")
 	//Catch all events from github
 	app.HandleFunc("/api/events", routes.Events).Methods("POST")
+	//Access token
+	app.HandleFunc("/api/access-token", routes.GetAccessToken).Methods("POST")
+	//Clone repos
+	app.HandleFunc("/api/clone-repos", routes.CloneRepos).Methods("POST")
 
 	//Allow CORS
 	credentialsOk := handlers.AllowCredentials()

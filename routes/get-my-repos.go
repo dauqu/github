@@ -6,8 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-
-	actions "dauqu.com/github/actions"
+	"os"
 	"github.com/golang-jwt/jwt/v4"
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -63,10 +62,21 @@ func GetMyRepos(w http.ResponseWriter, r *http.Request) {
 	//Convert installation id to string
 	installation_id_string := fmt.Sprintf("%v", installation_id)
 
-	res, err := actions.GetToken()
+	//Get current working directory
+	dir, err := os.Getwd()
 	if err != nil {
 		fmt.Println(err)
 	}
+
+	//Read token.txt file
+	token_byte, err := ioutil.ReadFile(dir + "/routes/token.txt")
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	//Convert token to string
+	res := string(token_byte)
+
 	//Post request to get access token
 	URL := "https://api.github.com/app/installations/" + installation_id_string + "/access_tokens"
 

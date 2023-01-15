@@ -11,6 +11,7 @@ import GitCode from './components/GitCode';
 import Register from './components/Register';
 import Home from './components/Home';
 import Dashboard from './components/Dashboard';
+import Profile from './components/Profile';
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,12 @@ const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: <Dashboard />,
+    children: [
+      {
+        path: "profile",
+        element: <Profile />,
+      },
+    ],
   },
   {
     path: "/login",

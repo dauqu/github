@@ -67,9 +67,6 @@ func InstallApp(w http.ResponseWriter, r *http.Request) {
 	//Get installation id from database
 	installation_id_db := result.Lookup("installation_id").StringValue()
 
-	fmt.Println(installation_id_db)
-	fmt.Println(installation_id)
-
 	//Check if installation id is already in database
 	if installation_id == installation_id_db {
 		w.Header().Set("Content-Type", "application/json")
@@ -93,5 +90,4 @@ func InstallApp(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(map[string]string{"message": "Successfully connected to github"})
-
 }
