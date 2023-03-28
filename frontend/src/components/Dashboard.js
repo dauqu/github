@@ -11,7 +11,6 @@ export default function Dashboard() {
     var navigate = useNavigate();
 
     const [data, setData] = React.useState([]);
-    console.log(data);
 
     async function GetRepos(e) {
         await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/get-repos`, {
@@ -36,7 +35,7 @@ export default function Dashboard() {
     async function CheckLogin() {
         //Get request to backend to check if user is logged in
         await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/is-logged-in`).then((res) => {
-            if (res.data.message !== "Authorized") {
+            if (data && res.data.message !== "Authorized") {
                 navigate("/login");
             }
             setLoginChecking(false);
@@ -62,7 +61,7 @@ export default function Dashboard() {
         setIsLoading(true);
         //Axios get request with header 
         await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/get-my-repos`).then((res) => {
-            setRepos(res.data.repositories);
+            setRepos(data && res.data.repositories);
             setIsLoading(false);
         }).catch((err) => {
             console.log(err);
@@ -90,7 +89,7 @@ export default function Dashboard() {
                                 GetRepos(e.target.value);
                             }}>
                             <option disabled defaultValue>Select App And View Repos</option>
-                            {apps.map((app, index) => {
+                            {apps && apps.map((app, index) => {
                                 return (
                                     <option onClick={(e) => {
                                         GetRepos(app.installation_id);
@@ -112,7 +111,7 @@ export default function Dashboard() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {isloading ? <div className="flex w-full h-full justify-center items-center"><div>Loading...</div></div> : repos !== null && repos.map((repo, index) => {
+                                {isloading ? <div className="flex w-full h-full justify-center items-center"><div>Loading...</div></div> : repos && repos.length != 0 && repos.map((repo, index) => {
                                     return (
                                         <tr key={index}>
                                             <th>
@@ -149,7 +148,6 @@ export default function Dashboard() {
                                             <th>
                                                 <button className="btn btn-ghost btn-xs"
                                                 onClick={(e) => {
-                                                        // Onclick copy to clipboard
                                                         navigator.clipboard.writeText(repo.clone_url);
                                                     }}>Copy Clone URL</button>
                                             </th>
